@@ -121,7 +121,14 @@ async function routes(fastify) {
   // Get CSRF token
   fastify.get('/csrf-token', async (req, reply) => {
     const { generateToken } = require('../../middleware/csrf');
-    return { csrfToken: generateToken() };
+    const csrfToken = generateToken();
+    reply.setCookie('csrf-token', csrfToken, {
+      httpOnly: false,
+      secure: isProduction,
+      sameSite: 'strict',
+      path: '/',
+    });
+    return { csrfToken };
   });
 
   // Verify email
