@@ -23,7 +23,9 @@ async function readFileWithRetry(filePath, retries = MAX_RETRIES) {
           `Failed to read ${path.basename(filePath)} after ${retries} attempts: ${err.message}`
         );
       }
-      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS * attempt));
+      await new Promise((resolve) =>
+        setTimeout(resolve, RETRY_DELAY_MS * attempt)
+      );
     }
   }
 }
@@ -96,7 +98,9 @@ async function migrate(migrationsDir) {
       try {
         await client.query(sql);
         console.log(`Migration applied: ${name}`);
-        await client.query('INSERT INTO _migrations (name) VALUES ($1)', [name]);
+        await client.query('INSERT INTO _migrations (name) VALUES ($1)', [
+          name,
+        ]);
         await client.query(
           'INSERT INTO _migration_checksums (name, sha256) VALUES ($1, $2)',
           [name, checksum]
